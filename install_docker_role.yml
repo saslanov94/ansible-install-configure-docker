@@ -4,7 +4,7 @@
 
   vars_prompt:
   - name: username
-    prompt: "What's the docker admin's user? (leave empty if unnecessary)"
+    prompt: "What's the docker admin's user? (leave empty if you plan to use root)"
     private: no
 
   - name: swarm_conf
