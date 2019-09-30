@@ -1,0 +1,46 @@
+- name: Add Docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker APT repo
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+    state: present
+    filename: docker
+
+- name: Install Docker Prerequisites
+  apt:
+    name: "{{ item.pack }}" 
+    update_cache: yes
+  with_items:
+    - { pack: software-properties-common }
+    - { pack: docker-ce }
+    - { pack: python3-distutils }
+
+- name: Install python-pip
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp/get-pip.py
+    mode: "0440"
+
+- name: Execute the get-pip.py script
+  shell: '{{ discovered_interpreter_python }} /tmp/get-pip.py'
+
+- name: Remove get-pip.py from the host
+  file:
+    state: absent
+    path: /tmp/get-pip.py
+
+- name: Install python-pip requirements
+  pip:
+    name: "{{ item.pip  }}"
+  with_items:
+    - { pip: docker }
+    - { pip: docker-py }
+
+- name: Start and Enable Docker
+  service:
+    name: docker
+    state: started
+    enabled: yes

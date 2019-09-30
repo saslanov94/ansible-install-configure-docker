@@ -1,0 +1,48 @@
+- name: Add the docker repo
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: Enable the docker edge repo
+  ini_file:
+    dest: /etc/yum.repos.d/docker-ce.repo
+    section: 'docker-ce-edge'
+    option: enabled
+    value: 0
+
+- name: Install the prerequisites and Docker-CE
+  yum:
+    name: "{{ item.pack }}"
+    state: latest
+  with_items:
+    - { pack: yum-utils }
+    - { pack: lvm2 }
+    - { pack: device-mapper-persistent-data }
+    - { pack: docker-ce }
+
+- name: Install python-pip
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp/get-pip.py
+    mode: "0440"
+
+- name: Execute the get-pip.py script
+  shell: '{{ discovered_interpreter_python }} /tmp/get-pip.py'
+
+- name: Remove get-pip.py from the host
+  file:
+    state: absent
+    path: /tmp/get-pip.py
+
+- name: Install python-pip requirements
+  pip:
+    name: "{{ item.pip  }}"
+  with_items:
+    - { pip: docker }
+    - { pip: docker-py }
+
+- name: Start and Enable Docker
+  service:
+    name: docker
+    state: started
+    enabled: yes

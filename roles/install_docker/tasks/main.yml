@@ -1,0 +1,12 @@
+---
+- name: Install ansible on RHEL
+  import_tasks: redhat.yml
+  when: ansible_facts['os_family']|lower == 'redhat'
+
+- name: Install ansible on Debian
+  import_tasks: debian.yml
+  when: ansible_facts['os_family']|lower == 'debian'
+
+- name: Add admin user to the Docker group
+  import_tasks: useradd.yml
+  when: username != ""

@@ -1,0 +1,16 @@
+---
+- hosts: docker
+  become: yes
+
+  vars_prompt:
+  - name: username
+    prompt: "What's the docker admin's user? (leave empty if unnecessary)"
+    private: no
+
+  - name: swarm_conf
+    prompt: "Do you want to cofigure Docker Swarm? (y/n)"
+    private: no
+
+  roles:
+    - { role: install_docker }
+    - { role: configure_swarm, when: swarm_conf == 'y' }
