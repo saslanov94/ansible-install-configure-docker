@@ -1,2 +1,8 @@
 ---
-# tasks file for configure_swarm
+- name: Initiate Docker Swarm on the Manager Node
+  import_tasks: swarm_manager.yml
+  when: manager_host == inventory_hostname
+
+- name: Join the Docker Swarm on other Worker Nodes
+  import_tasks: swarm_worker.yml
+  when: manager_host != inventory_hostname

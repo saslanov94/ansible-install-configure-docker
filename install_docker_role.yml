@@ -11,6 +11,10 @@
     prompt: "Do you want to cofigure Docker Swarm? (y/n)"
     private: no
 
+  - name: manager_host
+    prompt: "If you want a Docker Swarm, which node will be the manager node? (Please use inventory hostname)"
+    private: no
+
   roles:
     - { role: install_docker }
-    - { role: configure_swarm, when: swarm_conf == 'y' }
+    - { role: configure_swarm, when: (swarm_conf|lower == 'y') or (swarm_conf|lower == 'yes') }

@@ -1,0 +1,5 @@
+- debug:
+    msg: "Yo bitch use {{ docker_join_token }}"
+
+#- name: Join the Docker Swarm
+#  shell: "{{ docker_join_token }}"

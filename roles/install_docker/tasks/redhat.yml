@@ -38,8 +38,7 @@
   pip:
     name: "{{ item.pip  }}"
   with_items:
-    - { pip: docker }
-    - { pip: docker-py }
+    - { pip: docker-compose }
 
 - name: Start and Enable Docker
   service:
