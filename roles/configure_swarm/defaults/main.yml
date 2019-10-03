@@ -1,2 +1,3 @@
 ---
-# defaults file for configure_swarm
+#Docker Swarm Port
+docker_swarm_port: "2377"

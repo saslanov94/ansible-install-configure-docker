@@ -16,5 +16,5 @@
     private: no
 
   roles:
-    - { role: install_docker }
+    #- { role: install_docker }
     - { role: configure_swarm, when: (swarm_conf|lower == 'y') or (swarm_conf|lower == 'yes') }
