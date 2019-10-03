@@ -2,37 +2,38 @@
 - name: Register the address of the swarm manager
   set_fact:
     docker_swarm_address: "{{ ansible_default_ipv4.address }}"
-  when: manager_host == inventory_hostname
+  when: >
+        manager_host == inventory_hostname
 
 - name: Initiate Swarm on Master Node
   shell: "docker swarm init --advertise-addr {{ docker_swarm_address }}:{{ docker_swarm_port }}"
   ignore_errors: yes
-  when: manager_host == inventory_hostname
+  when: >
+        manager_host == inventory_hostname
 
 - name: Register the token for joining the Swarm as a Worker
   command: docker swarm join-token -q worker
   register: worker_token
-  when: manager_host == inventory_hostname
+  when: >
+        manager_host == inventory_hostname
 
 - name: Register the token for joining the Swarm as a Manager
   command: docker swarm join-token -q manager
   register: manager_token
-  when: manager_host == inventory_hostname
+  when: >
+        manager_host == inventory_hostname
 
 - name: Set Facts for Worker Token
   set_fact:
     docker_worker_token: "{{ worker_token }}"
-  when: manager_host == inventory_hostname
+  when: >
+        manager_host == inventory_hostname
 
 - name: Set Facts for Manager Token
   set_fact:
     docker_manager_token: "{{ manager_token }}"
-  when: manager_host == inventory_hostname
-
-- name: fuck
-  debug:
-    msg: "{{ hostvars[manager_host]['docker_worker_token.stdout'] }}"
-  ignore_errors: yes
+  when: >
+         manager_host == inventory_hostname
 
 - name: Add worker nodes to the Swarm
   shell: >
@@ -41,4 +42,5 @@
          "{{ hostvars[manager_host]['docker_swarm_address'] }}":"{{ docker_swarm_port }}"
   args:
     executable: /bin/bash
-  when: manager_host != inventory_hostname
+  when: >
+        manager_host != inventory_hostname
